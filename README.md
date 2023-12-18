@@ -1,2 +1,2 @@
-# ChivescoinExplorer
+# Chivescoin Explorer
 Chivescoin XCC Explorer
