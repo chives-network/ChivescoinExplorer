@@ -68,7 +68,7 @@ const AnalyticsDashboard = () => {
 
   useEffect(() => {
 
-    axios.get(authConfig.backEndApi + '/statistics_network', { headers: { }, params: { } })
+    axios.get(authConfig.backEndApi + '/api.statistic.php', { headers: { }, params: { } })
     .then(res => {
       setIsLoading(false);
       const dataMap: any = {};
@@ -93,43 +93,21 @@ const AnalyticsDashboard = () => {
       console.log("isLoading", isLoading)
     })
 
-    axios.get(authConfig.backEndApi + '/statistics_block', { headers: { }, params: { } })
-    .then(res => {
-      setIsLoading(false);
-      const dataMap: any = {};
-      const dataX: any[] = [];
-      const blocksnumber: any[] = [];
-      const Block_Rewards: any[] = [];
-      res.data.map((Item: {[key:string]:any}) => {
-        dataX.push(Item.Date.substring(5));
-        dataMap[Item.Date.substring(5)] = Item;
-      })
-      dataX.sort((a, b) => a - b);
-      const newDataX = dataX.slice(1).slice().slice(1).slice(-21, -1);
-      setDataX(newDataX)
-      newDataX.map((Item: string)=>{
-        blocksnumber.push(dataMap[Item].Blocks);
-        Block_Rewards.push(Math.floor(dataMap[Item].Block_Rewards/1000000000000));
-      })
-      setblocksnumber(blocksnumber)
-      setBlock_Rewards(Block_Rewards)
-    })
-
     //Frist Time Api Fetch
     //Block List 
-    axios.get(authConfig.backEndApi + '/blockpage/1/6', { headers: { }, params: { } })
+    axios.get(authConfig.backEndApi + '/block_data.php?page=1&pagesize=6', { headers: { }, params: { } })
       .then(res => {
         setBlockList(res.data.data.filter((record: any) => record.id))
       })
     
     //Transaction List 
-    axios.get(authConfig.backEndApi + '/transaction/0/6', { headers: { }, params: { } })
+    axios.get(authConfig.backEndApi + '/block_data.php?page=1&pagesize=6', { headers: { }, params: { } })
       .then(res => {
         setTransactionList(res.data.data.filter((record: any) => record.id))
       })
     
     //Chain Info
-    axios.get(authConfig.backEndApi + '/info', { headers: { }, params: { } })
+    axios.get(authConfig.backEndApi + '/api_getblockchaininfo.php', { headers: { }, params: { } })
       .then(res => {
         setChainInfo(res.data);
       })
@@ -149,7 +127,7 @@ const AnalyticsDashboard = () => {
           })
         
         //Chain Info
-        axios.get(authConfig.backEndApi + '/info', { headers: { }, params: { } })
+        axios.get(authConfig.backEndApi + '/api_getblockchaininfo.php', { headers: { }, params: { } })
           .then(res => {
             setChainInfo(res.data);
           })
