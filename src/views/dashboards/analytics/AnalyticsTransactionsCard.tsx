@@ -28,44 +28,29 @@ interface DataType {
   icon: ReactElement
 }
 
-interface ChainInfoType {
-  network: string
-  version: number
-  release: number
-  height: number
-  current: string
-  blocks: number
-  peers: number
-  time: number
-  miningtime: number
-  weave_size: number
-  denomination: number
-  diff: string
-}
-
-const renderStats = (data: ChainInfoType) => {
+const renderStats = (data: any) => {
   const salesData: DataType[] = [
     {
-      stats: String(data.height),
+      stats: String(data.BlockHeight.value),
       title: 'Height',
       color: 'primary',
       icon: <Icon icon='mdi:trending-up' />
     },
     {
-      stats: String(data.peers),
-      title: 'Peers',
+      stats: String(data.Farmers.value),
+      title: 'Farmers',
       color: 'success',
       icon: <Icon icon='mdi:account-outline' />
     },
     {
-      stats: String((data.weave_size/(1024*1024*1024)).toFixed(1)) + "Gb",
-      title: 'Weave Size',
+      stats: String(data.NetworkSpace.value) + " " + data.NetworkSpace.badge,
+      title: 'Network Space',
       color: 'warning',
       icon: <Icon icon='mdi:cellphone-link' />
     },
     {
-      stats: String(data.release),
-      title: 'Release',
+      stats: String(data.Node.MostActive),
+      title: 'Most Active',
       color: 'info',
       icon: <Icon icon='mdi:currency-usd' />
     }

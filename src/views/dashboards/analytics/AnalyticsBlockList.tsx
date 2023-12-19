@@ -45,7 +45,7 @@ const AnalyticsBlockList = (props: propsType) => {
 
   const columns: GridColDef[] = [
     {
-      flex: 0.15,
+      flex: 0.1,
       minWidth: 80,
       field: 'Height',
       headerName: `${t(`Height`)}`,
@@ -61,32 +61,18 @@ const AnalyticsBlockList = (props: propsType) => {
       }
     },
     {
-      flex: 0.4,
-      field: 'Time',
-      minWidth: 260,
-      headerName: `${t(`Time`)}`,
+      flex: 0.15,
+      minWidth: 80,
+      field: 'Hash',
+      headerName: `${t(`Hash`)}`,
       sortable: false,
       filterable: false,
       renderCell: ({ row }: BlockCellType) => {
+
         return (
-          <Typography noWrap variant='body2'>
-            {formatTimestampMemo(row.timestamp)}
-          </Typography>
-        )
-      }
-    },
-    {
-      flex: 0.1,
-      minWidth: 60,
-      headerName: `${t(`Txs`)}`,
-      field: 'Txs',
-      sortable: false,
-      filterable: false,
-      renderCell: ({ row }: BlockCellType) => {
-        return (
-          <Typography noWrap variant='body2'>
-            {row.txs_length}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <LinkStyled href={`/blocks/view/${row.height}`}>{row.header_hash}</LinkStyled>
+          </Box>
         )
       }
     },
@@ -100,7 +86,7 @@ const AnalyticsBlockList = (props: propsType) => {
       renderCell: ({ row }: BlockCellType) => {
         return (
           <Typography noWrap variant='body2'>
-            <LinkStyled href={`/addresses/all/${row.reward_addr}`}>{formatHash(row.reward_addr, 7)}</LinkStyled>
+            <LinkStyled href={`/addresses/all/${row.farmer_address}`}>{formatHash(row.farmer_address, 10)}</LinkStyled>
           </Typography>
         )
       }
@@ -115,7 +101,7 @@ const AnalyticsBlockList = (props: propsType) => {
       renderCell: ({ row }: BlockCellType) => {
         return (
           <Typography noWrap variant='body2'>
-            {formatSecondToMinute(row.mining_time)}
+            {row.timestamp}
           </Typography>
         )
       }

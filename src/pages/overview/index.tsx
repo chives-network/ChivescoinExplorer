@@ -50,15 +50,7 @@ const AnalyticsDashboard = () => {
 
   const [chainInfo, setChainInfo] = useState<ChainInfoType>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [dataX, setDataX] = useState<string[]>([])
-  const [dataWeaveSize, setDataWeaveSize] = useState<number[]>([])
-  const [difficulty, setDifficulty] = useState<number[]>([])
-  
-  const [blocksnumber, setblocksnumber] = useState<number[]>([])
-  const [Block_Rewards, setBlock_Rewards] = useState<number[]>([])
-
   const [blockList, setBlockList] = useState<number[]>([])
-  const [transactionList, setTransactionList] = useState<number[]>([])
 
   useEffect(() => {
     if(referee && referee.length == 43) {
@@ -66,68 +58,70 @@ const AnalyticsDashboard = () => {
     }
   }, [referee])
 
+  const [dataNETWORK_SPACE_X, setDataNETWORK_SPACE_X] = useState<string[]>([])
+  const [dataNETWORK_SPACE_Y, setDataNETWORK_SPACE_Y] = useState<number[]>([])
+  const [dataEVERY_DAY_TX_NUMBER_X, setDataEVERY_DAY_TX_NUMBER_X] = useState<string[]>([])
+  const [dataEVERY_DAY_TX_NUMBER_Y, setDataEVERY_DAY_TX_NUMBER_Y] = useState<number[]>([])
+  const [dataDIFFICULTY_X, setDataDIFFICULTY_X] = useState<string[]>([])
+  const [dataDIFFICULTY_Y, setDataDIFFICULTY_Y] = useState<number[]>([])
+  const [dataACTIVEMINERS_X, setDataACTIVEMINERS_X] = useState<string[]>([])
+  const [dataACTIVEMINERS_Y, setDataACTIVEMINERS_Y] = useState<number[]>([])
+
   useEffect(() => {
 
     axios.get(authConfig.backEndApi + '/api.statistic.php', { headers: { }, params: { } })
     .then(res => {
       setIsLoading(false);
-      const dataMap: any = {};
-      const dataX: any[] = [];
-      const dataWeaveSize: any[] = [];
-      const difficulty: any[] = [];
-      const endowment: any[] = [];
-      res.data.map((Item: {[key:string]:any}) => {
-        dataX.push(Item.Date.substring(5));
-        dataMap[Item.Date.substring(5)] = Item;
-      })
-      dataX.sort((a, b) => a - b);
-      const newDataX = dataX.slice(1).slice().slice(1).slice(-21, -1);
-      setDataX(newDataX)
-      newDataX.map((Item: string)=>{
-        dataWeaveSize.push((dataMap[Item].Weave_Size/(1024*1024*1024*1024)).toFixed(1))
-        difficulty.push((dataMap[Item].Difficulty/(1024*1024*1024)).toFixed(1))
-        endowment.push(Math.floor(dataMap[Item].Cumulative_Endowment/1000000000000))
-      })
-      setDataWeaveSize(dataWeaveSize)
-      setDifficulty(difficulty)
-      console.log("isLoading", isLoading)
+      setDataNETWORK_SPACE_X(res.data.NETWORK_SPACE.dataX);
+      setDataNETWORK_SPACE_Y(res.data.NETWORK_SPACE.dataY);
+      setDataEVERY_DAY_TX_NUMBER_X(res.data.EVERY_DAY_TX_NUMBER.dataX);
+      setDataEVERY_DAY_TX_NUMBER_Y(res.data.EVERY_DAY_TX_NUMBER.dataY);
+      setDataDIFFICULTY_X(res.data.DIFFICULTY.dataX);
+      setDataDIFFICULTY_Y(res.data.DIFFICULTY.dataY);
+      setDataACTIVEMINERS_X(res.data.ACTIVEMINERS.dataX);
+      setDataACTIVEMINERS_Y(res.data.ACTIVEMINERS.dataY);      
     })
 
     //Frist Time Api Fetch
     //Block List 
     axios.get(authConfig.backEndApi + '/block_data.php?page=1&pagesize=6', { headers: { }, params: { } })
       .then(res => {
-        setBlockList(res.data.data.filter((record: any) => record.id))
-      })
-    
-    //Transaction List 
-    axios.get(authConfig.backEndApi + '/block_data.php?page=1&pagesize=6', { headers: { }, params: { } })
-      .then(res => {
-        setTransactionList(res.data.data.filter((record: any) => record.id))
+        setBlockList(res.data.data)
+        console.log("res.data", res.data.data)
       })
     
     //Chain Info
-    axios.get(authConfig.backEndApi + '/api_getblockchaininfo.php', { headers: { }, params: { } })
+    axios.get(authConfig.backEndApi + '/api.node.php', { headers: { }, params: { } })
       .then(res => {
         setChainInfo(res.data);
       })
+
     const intervalId = setInterval(() => {
         
         //Interval Time Api Fetch
+        axios.get(authConfig.backEndApi + '/api.statistic.php', { headers: { }, params: { } })
+        .then(res => {
+          setIsLoading(false);
+          setDataNETWORK_SPACE_X(res.data.NETWORK_SPACE.dataX);
+          setDataNETWORK_SPACE_Y(res.data.NETWORK_SPACE.dataY);
+          setDataEVERY_DAY_TX_NUMBER_X(res.data.EVERY_DAY_TX_NUMBER.dataX);
+          setDataEVERY_DAY_TX_NUMBER_Y(res.data.EVERY_DAY_TX_NUMBER.dataY);
+          setDataDIFFICULTY_X(res.data.DIFFICULTY.dataX);
+          setDataDIFFICULTY_Y(res.data.DIFFICULTY.dataY);
+          setDataACTIVEMINERS_X(res.data.ACTIVEMINERS.dataX);
+          setDataACTIVEMINERS_Y(res.data.ACTIVEMINERS.dataY);      
+        })
+
+        //Frist Time Api Fetch
         //Block List 
-        axios.get(authConfig.backEndApi + '/blockpage/1/6', { headers: { }, params: { } })
+        axios.get(authConfig.backEndApi + '/block_data.php?page=1&pagesize=6', { headers: { }, params: { } })
           .then(res => {
-            setBlockList(res.data.data.filter((record: any) => record.id))
-          })
-        
-        //Transaction List 
-        axios.get(authConfig.backEndApi + '/transaction/0/6', { headers: { }, params: { } })
-          .then(res => {
-            setTransactionList(res.data.data.filter((record: any) => record.id))
+            setBlockList(res.data.data)
+            console.log("res.data", res.data.data)
           })
         
         //Chain Info
-        axios.get(authConfig.backEndApi + '/api_getblockchaininfo.php', { headers: { }, params: { } })
+        axios.get(authConfig.backEndApi + '/api.node.php', { headers: { }, params: { } })
           .then(res => {
             setChainInfo(res.data);
           })
@@ -155,14 +149,7 @@ const AnalyticsDashboard = () => {
             <Fragment></Fragment>
           }
         </Grid>
-        <Grid item xs={12} md={4}>
-          {transactionList && transactionList.length > 0 ?
-            <AnalyticsTransactionList data={transactionList}/>
-          :
-            <Fragment></Fragment>
-          }
-        </Grid>
-        <Grid item xs={12} md={12} lg={8}>
+        <Grid item xs={12} md={12} lg={12}>
           {blockList && blockList.length > 0 ?
             <AnalyticsBlockList data={blockList}/>
           :
@@ -170,16 +157,16 @@ const AnalyticsDashboard = () => {
           }
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
-          <AnalyticsLine dataX={dataX} dataY={blocksnumber} title={`${t(`Blocks Number Per Day`)}`} bottomText={""}/>
+          <AnalyticsLine dataX={dataNETWORK_SPACE_X} dataY={dataNETWORK_SPACE_Y} title={`${t(`Network Space`)}`} bottomText={""}/>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
-          <AnalyticsLine dataX={dataX} dataY={Block_Rewards} title={`${t(`Block Rewards Per Day`)}`} bottomText={""}/>
+          <AnalyticsLine dataX={dataDIFFICULTY_X} dataY={dataDIFFICULTY_Y} title={`${t(`Difficulty`)}`} bottomText={""}/>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
-          <AnalyticsLine dataX={dataX} dataY={dataWeaveSize} title={`${t(`Weave Size`)}`} bottomText={""}/>
+          <AnalyticsLine dataX={dataACTIVEMINERS_X} dataY={dataACTIVEMINERS_Y} title={`${t(`Active Miners`)}`} bottomText={""}/>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
-          <AnalyticsLine dataX={dataX} dataY={difficulty} title={`${t(`Difficulty`)}`} bottomText={""}/>
+          <AnalyticsLine dataX={dataEVERY_DAY_TX_NUMBER_X} dataY={dataEVERY_DAY_TX_NUMBER_Y} title={`${t(`Every Day Tx Number`)}`} bottomText={""}/>
         </Grid>
       </Grid>
     </ApexChartWrapper>

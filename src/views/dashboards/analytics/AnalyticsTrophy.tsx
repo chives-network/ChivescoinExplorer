@@ -22,23 +22,8 @@ const TrophyImg = styled('img')({
   position: 'absolute'
 })
 
-interface ChainInfoType {
-  network: string
-  version: number
-  release: number
-  height: number
-  current: string
-  blocks: number
-  peers: number
-  time: number
-  miningtime: number
-  weave_size: number
-  denomination: number
-  diff: string
-}
-
 export type propsType = {
-  data: ChainInfoType
+  data: any
 }
 
 // ** Third Party Import
@@ -61,9 +46,9 @@ const AnalyticsTrophy = (props: propsType) => {
       <CardContent>
         <Typography variant='h6'>{`${t(`Welcome to Chivescoin!`)}`} 🥳</Typography>
         <Typography variant='body2' sx={{ letterSpacing: '0.25px' }}>
-        {`${t(`A PERMANENT STORAGE PUBLIC CHAIN!`)}`}
+        {`${t(`An eco-friendly blockchain`)}`}
         </Typography>
-        {data.height > data.blocks ? 
+        {data.BlockHeight.badge != "Synced" ? 
         <Tooltip title={`${t(`Blockchain is currently syncing data. Please wait for a few hours before trying again`)}`} placement='bottom'>
           <Typography variant='h5' sx={{ my: 4, color: 'error.main' }}>
             {`${t(`Syncing`)}`} {Math.ceil(data.blocks*100/data.height)}%
