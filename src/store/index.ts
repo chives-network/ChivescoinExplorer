@@ -7,6 +7,7 @@ import transactions from 'src/store/apps/transactions'
 import addresstransactions from 'src/store/apps/addresstransactions'
 import blocktransactions from 'src/store/apps/blocktransactions'
 import addresses from 'src/store/apps/addresses'
+import masternode from 'src/store/apps/masternode'
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     addresstransactions,
     blocktransactions,
     addresses,
+    masternode,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

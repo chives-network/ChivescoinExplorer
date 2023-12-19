@@ -72,16 +72,16 @@ const Mempool = () => {
   useEffect(() => {
     
     //Frist Time Api Fetch
-    axios.get(authConfig.backEndApi + '/tx/pending/record', { headers: { }, params: { } })
+    axios.get(authConfig.backEndApi + '/api.mempool.php', { headers: { }, params: { } })
         .then(res => {
-          setTxViewInfo(res.data);
+          setTxViewInfo(res.data.data);
         })
 
     const intervalId = setInterval(() => {
       //Interval Time Api Fetch
-      axios.get(authConfig.backEndApi + '/tx/pending/record', { headers: { }, params: { } })
+      axios.get(authConfig.backEndApi + '/api.mempool.php', { headers: { }, params: { } })
         .then(res => {
-          setTxViewInfo(res.data);
+          setTxViewInfo(res.data.data);
         })
 
     }, 120000);
@@ -183,20 +183,17 @@ const Mempool = () => {
                     <TableRow>
                     <TableCell>{`${t(`Hash`)}`}</TableCell>
                     <TableCell>{`${t(`From`)}`}</TableCell>
-                    <TableCell>{`${t(`Size`)}`}</TableCell>
+                    <TableCell>{`${t(`To`)}`}</TableCell>
                     <TableCell>{`${t(`Fee`)}`}</TableCell>
-                    <TableCell>{`${t(`Info`)}`}</TableCell>
                     </TableRow>
                 </TableHead>
-
                 <TableBody>
                     {txViewInfo && txViewInfo.map((item: TxRecordType, index: number) => (
                     <TableRow hover key={index} sx={{ '&:last-of-type td': { border: 0 } }}>
                         <TableCell>{formatHash(item.id, 7)}</TableCell>
-                        <TableCell>{formatHash(item.owner.address, 7)}</TableCell>
-                        <TableCell>{formatStorageSize(item.data.size)}</TableCell>
-                        <TableCell>{formatXWE(item.fee.winston, 6)} XWE</TableCell>
-                        <TableCell><FormatTxInfoInRow TxRecord={item}/></TableCell>
+                        <TableCell>{formatHash(item.From, 7)}</TableCell>
+                        <TableCell>{formatHash(item.To, 6)}</TableCell>
+                        <TableCell>{item.Fee}</TableCell>
                     </TableRow>
                     ))}
                 </TableBody>

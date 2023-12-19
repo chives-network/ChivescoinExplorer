@@ -25,6 +25,11 @@ const ExplorerNavMenus = [
     path: '/addresses'
   },
   {
+    title: 'MasterNode',
+    icon: 'fa6-solid:share-nodes',
+    path: '/masternode'
+  },
+  {
     title: 'Nodes',
     icon: 'fa6-solid:share-nodes',
     path: '/nodes'

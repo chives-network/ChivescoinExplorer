@@ -5,43 +5,49 @@ import { useState, useEffect, Fragment } from 'react'
 import Link from 'next/link'
 
 // ** MUI Imports
+import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
+import TableContainer from '@mui/material/TableContainer'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-
-import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
-import CardContent from '@mui/material/CardContent'
-import TableContainer from '@mui/material/TableContainer'
+import StringDisplay from 'src/pages/preview/StringDisplay'
 
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Actions Imports
-import { fetchData } from 'src/store/apps/blocks'
+import { fetchData } from 'src/store/apps/masternode'
 
 // ** Types Imports
 import { RootState, AppDispatch } from 'src/store'
-import { BlockType } from 'src/types/apps/Chivescoin'
+import { AddressType } from 'src/types/apps/Chivescoin'
 
-import { formatHash, formatXWE, formatSecondToMinute, formatTimestampMemo, formatStorageSize } from 'src/configs/functions';
+import { formatHash, formatXWEAddress, formatTimestampMemo } from 'src/configs/functions'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
-
 import { isMobile } from 'src/configs/functions'
-import Pagination from '@mui/material/Pagination'
-import StringDisplay from 'src/pages/preview/StringDisplay'
 
-interface BlockCellType {
-  row: BlockType
+import Pagination from '@mui/material/Pagination'
+
+import addressName from 'src/configs/addressname'
+
+import AnalyticsMasterNodeCard from 'src/views/dashboards/analytics/AnalyticsMasterNodeCard'
+
+const addressMap: any = addressName
+
+
+interface AddressCellType {
+  row: AddressType
 }
 
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -55,14 +61,16 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   }
 }))
 
-const BlockList = () => {
+
+
+const MasternodeList = () => {
   // ** Hook
   const { t } = useTranslation()
-
+  
   // ** State
   const [isLoading, setIsLoading] = useState(false);
 
-  const paginationModelDefaultValue = { page: 0, pageSize: 12 }
+  const paginationModelDefaultValue = { page: 0, pageSize: 15 }
   const [paginationModel, setPaginationModel] = useState(paginationModelDefaultValue)  
   const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
     setPaginationModel({ ...paginationModel, page:page-1 });
@@ -70,13 +78,12 @@ const BlockList = () => {
   }  
   const isMobileData = isMobile()
 
-  console.log("paginationModel", paginationModel)
-  
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.blocks)
+  const store = useSelector((state: RootState) => state.masternode)
 
   useEffect(() => {
+    console.log("paginationModel", paginationModel)
     dispatch(
       fetchData({
         pageId: paginationModel.page,
@@ -89,96 +96,141 @@ const BlockList = () => {
     setIsLoading(false)
   }, [])
 
+  
   const columns: GridColDef[] = [
     {
-      flex: 0.1,
-      minWidth: 80,
+      flex: 0.3,
+      minWidth: 200,
+      field: 'launcher_id',
+      headerName: `${t(`Launcher Id`)}`,
+      sortable: false,
+      filterable: false,
+      renderCell: ({ row }: AddressCellType) => {
+        
+        return (
+          <Typography noWrap variant='body2'>
+            {formatHash(row.id, 15)}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      minWidth: 110,
       field: 'Height',
       headerName: `${t(`Height`)}`,
       sortable: false,
       filterable: false,
-      renderCell: ({ row }: BlockCellType) => {
-
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <LinkStyled href={`/blocks/view/${row.height}`}>{row.height}</LinkStyled>
-          </Box>
-        )
-      }
-    },
-    {
-      flex: 0.2,
-      minWidth: 80,
-      field: 'Hash',
-      headerName: `${t(`Hash`)}`,
-      sortable: false,
-      filterable: false,
-      renderCell: ({ row }: BlockCellType) => {
-
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <LinkStyled href={`/blocks/view/${row.height}`}>{row.header_hash}</LinkStyled>
-          </Box>
-        )
-      }
-    },
-    {
-      flex: 0.2,
-      minWidth: 110,
-      field: 'Miner',
-      headerName: `${t(`Miner`)}`,
-      sortable: false,
-      filterable: false,
-      renderCell: ({ row }: BlockCellType) => {
+      renderCell: ({ row }: AddressCellType) => {
         return (
           <Typography noWrap variant='body2'>
-            <LinkStyled href={`/addresses/all/${row.farmer_address}`}>{formatHash(row.farmer_address, 12)}</LinkStyled>
+            {row.Height}
           </Typography>
         )
       }
     },
     {
-      flex: 0.1,
+      flex: 0.15,
       minWidth: 110,
-      field: 'MinedTime',
-      headerName: `${t(`MinedTime`)}`,
+      field: 'StakingAmount',
+      headerName: `${t(`StakingAmount`)}`,
       sortable: false,
       filterable: false,
-      renderCell: ({ row }: BlockCellType) => {
+      renderCell: ({ row }: AddressCellType) => {
         return (
           <Typography noWrap variant='body2'>
-            {row.timestamp}
+            {row.StakingAmount}
           </Typography>
         )
       }
     },
     {
-      flex: 0.1,
+      flex: 0.15,
       minWidth: 110,
-      field: 'POS',
-      headerName: `${t(`POS`)}`,
+      field: 'RewardAmount',
+      headerName: `${t(`RewardAmount`)}`,
       sortable: false,
       filterable: false,
-      renderCell: ({ row }: BlockCellType) => {
+      renderCell: ({ row }: AddressCellType) => {
         return (
           <Typography noWrap variant='body2'>
-            {row.proof_of_space}
+            {row.RewardAmount}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      minWidth: 110,
+      field: 'NodeOnline',
+      headerName: `${t(`NodeOnline`)}`,
+      sortable: false,
+      filterable: false,
+      renderCell: ({ row }: AddressCellType) => {
+        return (
+          <Typography noWrap variant='body2'>
+            {row.NodeOnline}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.18,
+      minWidth: 110,
+      field: 'RewardDate',
+      headerName: `${t(`RewardDate`)}`,
+      sortable: false,
+      filterable: false,
+      renderCell: ({ row }: AddressCellType) => {
+        return (
+          <Typography noWrap variant='body2'>
+            {row.RewardDate}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      minWidth: 110,
+      field: 'ReceivedAddress',
+      headerName: `${t(`ReceivedAddress`)}`,
+      sortable: false,
+      filterable: false,
+      renderCell: ({ row }: AddressCellType) => {
+        return (
+          <Typography noWrap variant='body2'>
+            {row.ReceivedAddress}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      minWidth: 110,
+      field: 'StakingAddress',
+      headerName: `${t(`StakingAddress`)}`,
+      sortable: false,
+      filterable: false,
+      renderCell: ({ row }: AddressCellType) => {
+        return (
+          <Typography noWrap variant='body2'>
+            {row.StakingAddress}
           </Typography>
         )
       }
     }
   ]
-
+  
   return (
-    <Fragment>
+      <Fragment>
         {isMobileData ? 
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
-              <CardHeader title={`${t('Blocks')}`} sx={{ px: 5, py: 3 }}/>          
+              <CardHeader title={`${t('Masternode')}`} sx={{ px: 5, py: 3 }}/>          
             </Card>
           </Grid>
-          {store.data.map((row: any, index: number) => {
+          {store.data.map((item: any, index: number) => {
             return (
               <Grid item xs={12} sx={{ py: 0 }} key={index}>
                 <Card>
@@ -201,56 +253,28 @@ const BlockList = () => {
                           <TableRow>
                             <TableCell>
                               <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>
-                              {`${t(`Height`)}`}：<StringDisplay InputString={`${row.height}`} StringSize={7} href={`/blocks/view/${row.height}`}/>
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>
-                              {`${t(`Hash`)}`}：<StringDisplay InputString={`${row.indep_hash}`} StringSize={7} href={`/blocks/view/${row.height}`}/>
+                              {`${t(`Address`)}`}：<StringDisplay InputString={`${item.id}`} StringSize={7} href={`/masternode/all/${item.id}`}/>
                               </Typography>
                             </TableCell>
                           </TableRow>
                           <TableRow>
                             <TableCell>
                               <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Time`)}`}：{formatTimestampMemo(row.timestamp)}
+                              {`${t(`Balance`)}`}：{formatXWEAddress(item.balance, 4)}
                               </Typography>
                             </TableCell>
                           </TableRow>
                           <TableRow>
                             <TableCell>
                               <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Txs`)}`}：{row.txs_length}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>
-                              {`${t(`Miner`)}`}：<StringDisplay InputString={`${row.reward_addr}`} StringSize={7} href={`/addresses/all/${row.reward_addr}`}/>
+                              {`${t(`Discovery`)}`}：{item.lastblock}
                               </Typography>
                             </TableCell>
                           </TableRow>
                           <TableRow>
                             <TableCell>
                               <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Reward`)}`}：{formatXWE(row.reward, 2)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Size`)}`}：{formatStorageSize(row.block_size)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`MinedTime`)}`}：{formatSecondToMinute(row.mining_time)}
+                              {`${t(`Update`)}`}：{formatTimestampMemo(item.timestamp)}
                               </Typography>
                             </TableCell>
                           </TableRow>
@@ -266,7 +290,7 @@ const BlockList = () => {
           <Box sx={{ pl: 5, py: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
               <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
-                <Pagination count={Math.ceil(store.total/paginationModel.pageSize)} variant='outlined' color='primary' page={paginationModel.page+1} onChange={handlePageChange} siblingCount={1} boundaryCount={1} />
+                <Pagination count={Math.ceil(store.total/paginationModel.pageSize)} variant='outlined' color='primary' page={paginationModel.page+1} onChange={handlePageChange} siblingCount={2} boundaryCount={3} />
               </Grid>
             </Box>
           </Box>
@@ -275,7 +299,8 @@ const BlockList = () => {
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
-              <CardHeader title={`${t(`Blocks`)}`} />
+              <AnalyticsMasterNodeCard data={store.masternode}/>
+              <CardHeader title={`${t('Masternode Reward List')}`} />
               <Divider />
               <DataGrid
                 autoHeight
@@ -287,7 +312,7 @@ const BlockList = () => {
                 filterMode="server"
                 loading={isLoading}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 12, 15, 20, 30, 50, 100]}
+                pageSizeOptions={[10, 15, 20, 30, 50, 100]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 disableColumnMenu={true}
@@ -300,4 +325,5 @@ const BlockList = () => {
   )
 }
 
-export default BlockList
+
+export default MasternodeList

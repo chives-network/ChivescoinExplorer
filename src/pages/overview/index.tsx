@@ -8,7 +8,6 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import AnalyticsBlockList from 'src/views/dashboards/analytics/AnalyticsBlockList'
 import AnalyticsTrophy from 'src/views/dashboards/analytics/AnalyticsTrophy'
 import AnalyticsLine from 'src/views/dashboards/analytics/AnalyticsLine'
-import AnalyticsTransactionList from 'src/views/dashboards/analytics/AnalyticsTransactionList'
 import AnalyticsTransactionsCard from 'src/views/dashboards/analytics/AnalyticsTransactionsCard'
 
 import axios from 'axios'
