@@ -15,14 +15,9 @@ import TableHead from '@mui/material/TableHead'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
 import CardHeader from '@mui/material/CardHeader'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
 import TableContainer from '@mui/material/TableContainer'
 
-import { formatTimestamp, formatStorageSize } from 'src/configs/functions';
-
 import { ThemeColor } from 'src/@core/layouts/types'
-import { isMobile } from 'src/configs/functions'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
@@ -68,8 +63,6 @@ const PeersInfo = () => {
   
   const [peers, setPeers] = useState<NodeInfoType[]>()
 
-  const isMobileData = isMobile()
-
   useEffect(() => {
     
     //Frist Time Api Fetch
@@ -94,81 +87,6 @@ const PeersInfo = () => {
     <Fragment>
       {peers ? 
         <Grid container spacing={6}>
-          
-          {isMobileData ?
-            <Fragment>
-              {peers.map((item: NodeInfoType, index: number) => (
-                <Grid item xs={12} sx={{ py: 1 }} key={index}>
-                  <Card>
-                    <CardContent> 
-                      <TableContainer>
-                        <Table size='small' sx={{ width: '95%' }}>
-                          <TableBody
-                            sx={{
-                              '& .MuiTableCell-root': {
-                                border: 0,
-                                pt: 1.5,
-                                pb: 1.5,
-                                pl: '0 !important',
-                                pr: '0 !important',
-                                '&:first-of-type': {
-                                  width: 148
-                                }
-                              }
-                            }}
-                          >
-                            <TableRow>
-                              <TableCell>
-                                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                {`${t(`Ip`)}`}：{item.ip}
-                                </Typography>
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                {`${t(`Location`)}`}：{item.result.location}
-                                </Typography>
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                {`${t(`Isp`)}`}：{item.result.isp}
-                                </Typography>
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                {`${t(`Country`)}`}：{item.result.country}
-                                </Typography>
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                {`${t(`Region`)}`}：{item.result.region}
-                                </Typography>
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                {`${t(`City`)}`}：{item.result.city}
-                                </Typography>
-                              </TableCell>
-                            </TableRow>
-
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </CardContent>    
-                  </Card>
-                </Grid>
-              ))}              
-            </Fragment>
-          :
           <Grid item xs={12}>
             <Card>
               <CardHeader title={`${t(`Nodes`)}`} />
@@ -209,7 +127,6 @@ const PeersInfo = () => {
               
             </Card>
           </Grid>
-          }
           
         </Grid>
       :

@@ -48,7 +48,6 @@ const AnalyticsDashboard = () => {
   const { referee } = router.query
 
   const [chainInfo, setChainInfo] = useState<ChainInfoType>()
-  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [blockList, setBlockList] = useState<number[]>([])
 
   useEffect(() => {
@@ -70,7 +69,7 @@ const AnalyticsDashboard = () => {
 
     axios.get(authConfig.backEndApi + '/api.statistic.php', { headers: { }, params: { } })
     .then(res => {
-      setIsLoading(false);
+      
       setDataNETWORK_SPACE_X(res.data.NETWORK_SPACE.dataX);
       setDataNETWORK_SPACE_Y(res.data.NETWORK_SPACE.dataY);
       setDataEVERY_DAY_TX_NUMBER_X(res.data.EVERY_DAY_TX_NUMBER.dataX);
@@ -100,7 +99,7 @@ const AnalyticsDashboard = () => {
         //Interval Time Api Fetch
         axios.get(authConfig.backEndApi + '/api.statistic.php', { headers: { }, params: { } })
         .then(res => {
-          setIsLoading(false);
+          
           setDataNETWORK_SPACE_X(res.data.NETWORK_SPACE.dataX);
           setDataNETWORK_SPACE_Y(res.data.NETWORK_SPACE.dataY);
           setDataEVERY_DAY_TX_NUMBER_X(res.data.EVERY_DAY_TX_NUMBER.dataX);

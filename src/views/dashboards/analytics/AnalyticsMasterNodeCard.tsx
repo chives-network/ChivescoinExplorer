@@ -37,13 +37,13 @@ const renderStats = (data: any) => {
       icon: <Icon icon='mdi:trending-up' />
     },
     {
-      stats: String(data.AllStakingAmount.toLocaleString()),
+      stats: String(data.AllStakingAmount?.toLocaleString()),
       title: 'AllStakingAmount',
       color: 'success',
       icon: <Icon icon='mdi:account-outline' />
     },
     {
-      stats: String(data.TotalCoin.toLocaleString()),
+      stats: String(data.TotalCoin?.toLocaleString()),
       title: 'Total Coin',
       color: 'warning',
       icon: <Icon icon='mdi:cellphone-link' />

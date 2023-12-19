@@ -16,20 +16,14 @@ import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
 import CardHeader from '@mui/material/CardHeader'
 import TableContainer from '@mui/material/TableContainer'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
-
-import { formatHash, formatXWE, formatStorageSize } from 'src/configs/functions';
+import { formatHash } from 'src/configs/functions';
 
 import { ThemeColor } from 'src/@core/layouts/types'
 
-import { TxRecordType } from 'src/types/apps/Chivescoin'
-
-import FormatTxInfoInRow from 'src/pages/preview/FormatTxInfoInRow';
+import { TxRecordType } from 'src/types/apps/Chivesweave'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
-import { isMobile } from 'src/configs/functions'
 
 interface FileTypeObj {
   [key: string]: {
@@ -67,8 +61,6 @@ const Mempool = () => {
     
   const [txViewInfo, setTxViewInfo] = useState<TxRecordType[]>()
 
-  const isMobileData = isMobile()
-
   useEffect(() => {
     
     //Frist Time Api Fetch
@@ -91,88 +83,6 @@ const Mempool = () => {
 
   return (
     <Fragment>
-        {isMobileData ? 
-          <Fragment>
-            <Grid item xs={12}>
-              <Card>
-                <CardHeader title={`${t(`Transactions in memory`)}`} />
-              </Card>
-            </Grid>
-            {txViewInfo && txViewInfo.map((item: TxRecordType, index: number) => (                  
-              <Grid item xs={12} sx={{ py: 1 }} key={index}>
-                <Card>
-                  <CardContent> 
-                    <TableContainer>
-                      <Table size='small' sx={{ width: '95%' }}>
-                        <TableBody
-                          sx={{
-                            '& .MuiTableCell-root': {
-                              border: 0,
-                              pt: 1.5,
-                              pb: 1.5,
-                              pl: '0 !important',
-                              pr: '0 !important',
-                              '&:first-of-type': {
-                                width: 148
-                              }
-                            }
-                          }}
-                        >
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary'}}>
-                              {`${t(`Hash`)}`}：{formatHash(item.id, 12)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary'}}>
-                              {`${t(`From`)}`}：{formatHash(item.owner.address, 12)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Size`)}`}：{formatStorageSize(item.data.size)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Fee`)}`}：{formatXWE(item.fee.winston, 6)} XWE
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              <FormatTxInfoInRow TxRecord={item}/>
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-            {txViewInfo && txViewInfo.length == 0 ?
-            <Grid item xs={12} sx={{pt: 3}}>
-              <Card>
-                <CardHeader title={`${t(`No Data`)}`} />
-              </Card>
-            </Grid>
-            :
-            null
-            }
-          </Fragment>
-
-        :
         <Grid item xs={12}>
           <Card>
             <CardHeader title={`${t(`Transactions in memory`)}`} />
@@ -188,7 +98,7 @@ const Mempool = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {txViewInfo && txViewInfo.map((item: TxRecordType, index: number) => (
+                    {txViewInfo && txViewInfo.map((item: any, index: number) => (
                     <TableRow hover key={index} sx={{ '&:last-of-type td': { border: 0 } }}>
                         <TableCell>{formatHash(item.id, 7)}</TableCell>
                         <TableCell>{formatHash(item.From, 7)}</TableCell>
@@ -201,11 +111,6 @@ const Mempool = () => {
             </TableContainer>
           </Card>
         </Grid>
-        }
-        
-
-        
-        
     </Fragment>
   )
 }

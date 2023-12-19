@@ -14,12 +14,6 @@ import CardHeader from '@mui/material/CardHeader'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
 import Box from '@mui/material/Box'
-import Table from '@mui/material/Table'
-import TableRow from '@mui/material/TableRow'
-import TableCell from '@mui/material/TableCell'
-import TableBody from '@mui/material/TableBody'
-import CardContent from '@mui/material/CardContent'
-import TableContainer from '@mui/material/TableContainer'
 
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
@@ -29,19 +23,17 @@ import { fetchData } from 'src/store/apps/blocks'
 
 // ** Types Imports
 import { RootState, AppDispatch } from 'src/store'
-import { BlockType } from 'src/types/apps/Chivescoin'
 
-import { formatHash, formatXWE, formatSecondToMinute, formatTimestampMemo, formatStorageSize } from 'src/configs/functions';
+import { formatHash} from 'src/configs/functions';
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
-import { isMobile } from 'src/configs/functions'
-import Pagination from '@mui/material/Pagination'
-import StringDisplay from 'src/pages/preview/StringDisplay'
+// ** Config
+import authConfig from 'src/configs/auth'
 
 interface BlockCellType {
-  row: BlockType
+  row: any
 }
 
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -52,6 +44,8 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   color: theme.palette.text.secondary,
   '&:hover': {
     color: theme.palette.primary.main
+  },
+  '&[target="_blank"]': {
   }
 }))
 
@@ -64,12 +58,7 @@ const BlockList = () => {
 
   const paginationModelDefaultValue = { page: 0, pageSize: 12 }
   const [paginationModel, setPaginationModel] = useState(paginationModelDefaultValue)  
-  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
-    setPaginationModel({ ...paginationModel, page:page-1 });
-    console.log("handlePageChange", event)
-  }  
-  const isMobileData = isMobile()
-
+  
   console.log("paginationModel", paginationModel)
   
   // ** Hooks
@@ -101,7 +90,7 @@ const BlockList = () => {
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <LinkStyled href={`/blocks/view/${row.height}`}>{row.height}</LinkStyled>
+            <LinkStyled href={authConfig.backEndApi + `/blockview.php?header_hash=` + row.header_hash + `&height=` + row.height} target="_blank">{row.height}</LinkStyled>
           </Box>
         )
       }
@@ -117,7 +106,7 @@ const BlockList = () => {
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <LinkStyled href={`/blocks/view/${row.height}`}>{row.header_hash}</LinkStyled>
+            <LinkStyled href={authConfig.backEndApi + `/blockview.php?header_hash=` + row.header_hash + `&height=` + row.height} target="_blank">{formatHash(row.header_hash, 12)}</LinkStyled>
           </Box>
         )
       }
@@ -132,7 +121,7 @@ const BlockList = () => {
       renderCell: ({ row }: BlockCellType) => {
         return (
           <Typography noWrap variant='body2'>
-            <LinkStyled href={`/addresses/all/${row.farmer_address}`}>{formatHash(row.farmer_address, 12)}</LinkStyled>
+            <LinkStyled href={authConfig.backEndApi + `/addressview.php?address=` + row.farmer_address + `&height=` + row.height + ``} target="_blank">{formatHash(row.farmer_address, 12)}</LinkStyled>
           </Typography>
         )
       }
@@ -171,107 +160,6 @@ const BlockList = () => {
 
   return (
     <Fragment>
-        {isMobileData ? 
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <Card>
-              <CardHeader title={`${t('Blocks')}`} sx={{ px: 5, py: 3 }}/>          
-            </Card>
-          </Grid>
-          {store.data.map((row: any, index: number) => {
-            return (
-              <Grid item xs={12} sx={{ py: 0 }} key={index}>
-                <Card>
-                  <CardContent>      
-                    <TableContainer>
-                      <Table size='small' sx={{ width: '95%' }}>
-                        <TableBody
-                          sx={{
-                            '& .MuiTableCell-root': {
-                              border: 0,
-                              pb: 1.5,
-                              pl: '0 !important',
-                              pr: '0 !important',
-                              '&:first-of-type': {
-                                width: 148
-                              }
-                            }
-                          }}
-                        >
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>
-                              {`${t(`Height`)}`}：<StringDisplay InputString={`${row.height}`} StringSize={7} href={`/blocks/view/${row.height}`}/>
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>
-                              {`${t(`Hash`)}`}：<StringDisplay InputString={`${row.indep_hash}`} StringSize={7} href={`/blocks/view/${row.height}`}/>
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Time`)}`}：{formatTimestampMemo(row.timestamp)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Txs`)}`}：{row.txs_length}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>
-                              {`${t(`Miner`)}`}：<StringDisplay InputString={`${row.reward_addr}`} StringSize={7} href={`/addresses/all/${row.reward_addr}`}/>
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Reward`)}`}：{formatXWE(row.reward, 2)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Size`)}`}：{formatStorageSize(row.block_size)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`MinedTime`)}`}：{formatSecondToMinute(row.mining_time)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </CardContent>      
-                </Card>
-              </Grid>
-            )
-          })}
-          <Box sx={{ pl: 5, py: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-              <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
-                <Pagination count={Math.ceil(store.total/paginationModel.pageSize)} variant='outlined' color='primary' page={paginationModel.page+1} onChange={handlePageChange} siblingCount={1} boundaryCount={1} />
-              </Grid>
-            </Box>
-          </Box>
-        </Grid>
-        :
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
@@ -295,7 +183,6 @@ const BlockList = () => {
             </Card>
           </Grid>
         </Grid>
-        }
       </Fragment>
   )
 }

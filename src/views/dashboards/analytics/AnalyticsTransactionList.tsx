@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography'
 
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
-import { TxRecordType } from 'src/types/apps/Chivescoin'
+import { TxRecordType } from 'src/types/apps/Chivesweave'
 
 import { formatHash, formatXWE, getContentTypeAbbreviation } from 'src/configs/functions';
 

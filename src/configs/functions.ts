@@ -1,4 +1,4 @@
-import { TxRecordType } from 'src/types/apps/Chivescoin'
+import { TxRecordType } from 'src/types/apps/Chivesweave'
 
 export function formatHash(inputString: string, spliceSize: number): string {
   if(inputString == undefined) {

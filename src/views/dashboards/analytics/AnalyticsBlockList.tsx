@@ -1,6 +1,4 @@
 
-import { BlockType } from 'src/types/apps/Chivescoin'
-
 // ** Next Imports
 import Link from 'next/link'
 
@@ -11,13 +9,13 @@ import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
-import { formatHash, formatSecondToMinute, formatTimestampMemo } from 'src/configs/functions';
+import { formatHash } from 'src/configs/functions';
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
 
 interface BlockCellType {
-  row: BlockType
+  row: any
 }
 
 const LinkStyled = styled(Link)(({ theme }) => ({

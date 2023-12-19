@@ -76,7 +76,7 @@ const renderStats = (data: any) => {
 }
 
 export type propsType = {
-  data: ChainInfoType
+  data: any
 }
 
 const AnalyticsTransactionsCard = (props: propsType) => {

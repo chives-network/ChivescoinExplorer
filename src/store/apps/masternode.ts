@@ -23,7 +23,7 @@ export const appMasternodeSlice = createSlice({
     data: [],
     total: 1,
     params: {},
-    masternode: []
+    masternode: {TotalCoin: ''}
   },
   reducers: {},
   extraReducers: builder => {

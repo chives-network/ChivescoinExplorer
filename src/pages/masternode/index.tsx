@@ -5,21 +5,13 @@ import { useState, useEffect, Fragment } from 'react'
 import Link from 'next/link'
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
-import TableContainer from '@mui/material/TableContainer'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import Table from '@mui/material/Table'
-import TableRow from '@mui/material/TableRow'
-import TableCell from '@mui/material/TableCell'
-import TableBody from '@mui/material/TableBody'
-import StringDisplay from 'src/pages/preview/StringDisplay'
 
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
@@ -29,25 +21,19 @@ import { fetchData } from 'src/store/apps/masternode'
 
 // ** Types Imports
 import { RootState, AppDispatch } from 'src/store'
-import { AddressType } from 'src/types/apps/Chivescoin'
 
-import { formatHash, formatXWEAddress, formatTimestampMemo } from 'src/configs/functions'
+import { formatHash } from 'src/configs/functions'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
-import { isMobile } from 'src/configs/functions'
-
-import Pagination from '@mui/material/Pagination'
-
-import addressName from 'src/configs/addressname'
 
 import AnalyticsMasterNodeCard from 'src/views/dashboards/analytics/AnalyticsMasterNodeCard'
 
-const addressMap: any = addressName
-
+// ** Config
+import authConfig from 'src/configs/auth'
 
 interface AddressCellType {
-  row: AddressType
+  row: any
 }
 
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -72,12 +58,7 @@ const MasternodeList = () => {
 
   const paginationModelDefaultValue = { page: 0, pageSize: 15 }
   const [paginationModel, setPaginationModel] = useState(paginationModelDefaultValue)  
-  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
-    setPaginationModel({ ...paginationModel, page:page-1 });
-    console.log("handlePageChange", event)
-  }  
-  const isMobileData = isMobile()
-
+  
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.masternode)
@@ -90,6 +71,7 @@ const MasternodeList = () => {
         pageSize: paginationModel.pageSize
       })
     )
+    console.log("store.masternode", store.masternode)
   }, [dispatch, paginationModel])
 
   useEffect(() => {
@@ -106,12 +88,11 @@ const MasternodeList = () => {
       sortable: false,
       filterable: false,
       renderCell: ({ row }: AddressCellType) => {
-        
         return (
-          <Typography noWrap variant='body2'>
-            {formatHash(row.id, 15)}
-          </Typography>
-        )
+            <Typography noWrap variant='body2'>
+              <LinkStyled href={authConfig.backEndApi + `/coinnameview.php?goback=block&coinname=` + row.id} target="_blank">{formatHash(row.id, 12)}</LinkStyled>
+            </Typography>
+          )
       }
     },
     {
@@ -199,7 +180,7 @@ const MasternodeList = () => {
       renderCell: ({ row }: AddressCellType) => {
         return (
           <Typography noWrap variant='body2'>
-            {row.ReceivedAddress}
+            <LinkStyled href={authConfig.backEndApi + `/addressview.php?address=` + row.ReceivedAddress} target="_blank">{formatHash(row.ReceivedAddress, 12)}</LinkStyled>
           </Typography>
         )
       }
@@ -214,7 +195,7 @@ const MasternodeList = () => {
       renderCell: ({ row }: AddressCellType) => {
         return (
           <Typography noWrap variant='body2'>
-            {row.StakingAddress}
+            <LinkStyled href={authConfig.backEndApi + `/addressview.php?address=` + row.StakingAddress} target="_blank">{formatHash(row.StakingAddress, 12)}</LinkStyled>
           </Typography>
         )
       }
@@ -223,83 +204,14 @@ const MasternodeList = () => {
   
   return (
       <Fragment>
-        {isMobileData ? 
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
-              <CardHeader title={`${t('Masternode')}`} sx={{ px: 5, py: 3 }}/>          
-            </Card>
-          </Grid>
-          {store.data.map((item: any, index: number) => {
-            return (
-              <Grid item xs={12} sx={{ py: 0 }} key={index}>
-                <Card>
-                  <CardContent>      
-                    <TableContainer>
-                      <Table size='small' sx={{ width: '95%' }}>
-                        <TableBody
-                          sx={{
-                            '& .MuiTableCell-root': {
-                              border: 0,
-                              pb: 1.5,
-                              pl: '0 !important',
-                              pr: '0 !important',
-                              '&:first-of-type': {
-                                width: 148
-                              }
-                            }
-                          }}
-                        >
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>
-                              {`${t(`Address`)}`}：<StringDisplay InputString={`${item.id}`} StringSize={7} href={`/masternode/all/${item.id}`}/>
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Balance`)}`}：{formatXWEAddress(item.balance, 4)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Discovery`)}`}：{item.lastblock}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell>
-                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                              {`${t(`Update`)}`}：{formatTimestampMemo(item.timestamp)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </CardContent>      
-                </Card>
-              </Grid>
-            )
-          })}
-          <Box sx={{ pl: 5, py: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-              <Grid item key={"Pagination"} xs={12} sm={12} md={12} lg={12} sx={{ padding: '10px 0 10px 0' }}>
-                <Pagination count={Math.ceil(store.total/paginationModel.pageSize)} variant='outlined' color='primary' page={paginationModel.page+1} onChange={handlePageChange} siblingCount={2} boundaryCount={3} />
-              </Grid>
-            </Box>
-          </Box>
-        </Grid>
-        :
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <Card>
+              { store.masternode && store.masternode.TotalCoin ?
               <AnalyticsMasterNodeCard data={store.masternode}/>
+              :
+              null
+              }
               <CardHeader title={`${t('Masternode Reward List')}`} />
               <Divider />
               <DataGrid
@@ -320,7 +232,6 @@ const MasternodeList = () => {
             </Card>
           </Grid>
         </Grid>
-        }
       </Fragment>
   )
 }

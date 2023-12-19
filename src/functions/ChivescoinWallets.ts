@@ -5,7 +5,7 @@ import { PromisePool } from '@supercharge/promise-pool'
 
 import type { JWKInterface } from 'arweave/web/lib/wallet'
 
-import { TxRecordType } from 'src/types/apps/Chivescoin'
+import { TxRecordType } from 'src/types/apps/Chivesweave'
 
 // @ts-ignore
 import { v4 } from 'uuid'

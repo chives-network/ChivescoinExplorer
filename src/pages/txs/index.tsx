@@ -30,7 +30,7 @@ import { fetchData } from 'src/store/apps/transactions'
 
 // ** Types Imports
 import { RootState, AppDispatch } from 'src/store'
-import { TxRecordType } from 'src/types/apps/Chivescoin'
+import { TxRecordType } from 'src/types/apps/Chivesweave'
 
 import { formatHash, formatXWE, formatStorageSize, formatTimestampAge } from 'src/configs/functions';
 
