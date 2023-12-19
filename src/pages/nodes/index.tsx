@@ -62,96 +62,27 @@ interface NodeInfoType {
   result: any
 }
 
-interface ChainInfoType {
-  network: string
-  version: number
-  release: number
-  height: number
-  current: string
-  blocks: number
-  peers: number
-  time: number
-  miningtime: number
-  weave_size: number
-  denomination: number
-  diff: string
-}
-
 const PeersInfo = () => {
   // ** Hook
   const { t } = useTranslation()
   
   const [peers, setPeers] = useState<NodeInfoType[]>()
 
-  const [chainInfo, setChainInfo] = useState<ChainInfoType>()
-
   const isMobileData = isMobile()
-
-  useEffect(() => {
-    axios.get(authConfig.backEndApi + '/info', { headers: { }, params: { } })
-        .then(res => {
-          setChainInfo(res.data);
-        })
-        .catch(() => {
-          console.log("axios.get editUrl return")
-        })
-
-        /*
-        // 示例
-        const plaintext = 'Hello, AES-GCM!Hello!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
-        
-        const getCurrentWalletData = getCurrentWallet();
-        const FileEncrypt = EncryptDataWithKey(plaintext, "FileName001", getCurrentWalletData.jwk);
-        
-        console.log('EncryptDataWithKeyData:', FileEncrypt);
-
-        const FileCipherKey = calculateSHA256(FileEncrypt['Cipher-IV'] + FileEncrypt['Cipher-UUID'] + getCurrentWalletData.jwk.d);
-        console.log('FileCipherKey:', FileCipherKey);
-
-        const FileName = DecryptDataAES256GCM(FileEncrypt['File-Name'], FileEncrypt['Cipher-IV'], FileEncrypt['Cipher-TAG-FileName'], FileCipherKey);
-        console.log('FileName:', FileName);
-
-        const FileEncryptKey = DecryptDataAES256GCM(FileEncrypt['Cipher-KEY'], FileEncrypt['Cipher-IV'], FileEncrypt['Cipher-TAG'], FileCipherKey);
-        console.log('FileEncryptKey:', FileEncryptKey);
-
-        const IV = FileEncryptKey.slice(0,32);
-        const TAG = FileEncryptKey.slice(32,64);
-        const KEY = FileEncryptKey.slice(64);
-        console.log('IV:', IV);
-        console.log('TAG:', TAG);
-        console.log('KEY:', KEY);
-        const FileContent = DecryptDataAES256GCM(FileEncrypt['Cipher-CONTENT'], IV, TAG, KEY);
-        console.log('FileContent:', FileContent);
-
-        const encryptAndDecrypt = async () => {
-          const getCurrentWalletData = getCurrentWallet();      
-          const plaintext = 'Hello, World!!!!!!!!!!!!!!!!!!!!--!!!!0';      
-          const encryptedData = await encryptWithPublicKey(getCurrentWalletData.jwk.n, plaintext);
-          console.log('Encrypted Data:', encryptedData);      
-          const decryptedText = await decryptWithPrivateKey(getCurrentWalletData.jwk, encryptedData);
-          console.log('Decrypted Text:', decryptedText);      
-        }
-        encryptAndDecrypt();
-
-        */
-
-  }, [])
-
-
 
   useEffect(() => {
     
     //Frist Time Api Fetch
-    axios.get(authConfig.backEndApi + '/peersinfo', { headers: { }, params: { } })
+    axios.get(authConfig.backEndApi + '/nodes_data.php?page=1&limit=500', { headers: { }, params: { } })
         .then(res => {
-          setPeers(res.data);
+          setPeers(res.data.data);
         })
 
     const intervalId = setInterval(() => {
       //Interval Time Api Fetch
-      axios.get(authConfig.backEndApi + '/peersinfo', { headers: { }, params: { } })
+      axios.get(authConfig.backEndApi + '/nodes_data.php?page=1&limit=500', { headers: { }, params: { } })
         .then(res => {
-          setPeers(res.data);
+          setPeers(res.data.data);
         })
     }, 120000);
 
@@ -163,85 +94,6 @@ const PeersInfo = () => {
     <Fragment>
       {peers ? 
         <Grid container spacing={6}>
-          
-          {chainInfo != undefined ?
-            <Grid item xs={12}>
-              <Card>
-                <CardHeader title={`${t(`Blockchain`)}`} />
-                <CardContent>
-                  <Grid container spacing={6}>
-
-                    <Grid item xs={12} lg={12}>
-                      <TableContainer>
-                        <Table size='small' sx={{ width: '95%' }}>
-                          <TableBody
-                            sx={{
-                              '& .MuiTableCell-root': {
-                                border: 0,
-                                pt: 1.5,
-                                pb: 1.5,
-                                pl: '0 !important',
-                                pr: '0 !important',
-                                '&:first-of-type': {
-                                  width: 148
-                                }
-                              }
-                            }}
-                          >
-                            <TableRow>
-                              <TableCell>
-                                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                {`${t(`Network`)}`}:
-                                </Typography>
-                              </TableCell>
-                              <TableCell>{chainInfo.network}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                {`${t(`Height`)}`}:
-                                </Typography>
-                              </TableCell>
-                              <TableCell>{chainInfo.height}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                {`${t(`Time`)}`}:
-                                </Typography>
-                              </TableCell>
-                              <TableCell>{formatTimestamp(chainInfo.time)}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                {`${t(`Peers`)}`}:
-                                </Typography>
-                              </TableCell>
-                              <TableCell>{chainInfo.peers}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                                {`${t(`Weave Size`)}`}:
-                                </Typography>
-                              </TableCell>
-                              <TableCell>{formatStorageSize(chainInfo.weave_size)}</TableCell>
-                            </TableRow>
-
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Grid>
-
-                  </Grid>
-                </CardContent>
-
-              </Card>
-            </Grid>
-          :
-            <Fragment></Fragment>
-          }
           
           {isMobileData ?
             <Fragment>
@@ -327,24 +179,28 @@ const PeersInfo = () => {
                 <Table sx={{ minWidth: 500 }}>
                   <TableHead >
                     <TableRow>
-                      <TableCell>{`${t(`Ip`)}`}</TableCell>
-                      <TableCell>{`${t(`Location`)}`}</TableCell>
-                      <TableCell>{`${t(`Isp`)}`}</TableCell>
                       <TableCell>{`${t(`Country`)}`}</TableCell>
                       <TableCell>{`${t(`Region`)}`}</TableCell>
-                      <TableCell>{`${t(`City`)}`}</TableCell>
+                      <TableCell>{`${t(`Peer Host`)}`}</TableCell>
+                      <TableCell>{`${t(`Node Id`)}`}</TableCell>
+                      <TableCell>{`${t(`Peak Height`)}`}</TableCell>
+                      <TableCell>{`${t(`Bytes Read`)}`}</TableCell>
+                      <TableCell>{`${t(`Bytes Written`)}`}</TableCell>
+                      <TableCell>{`${t(`Last Message Time`)}`}</TableCell>
                     </TableRow>
                   </TableHead>
 
                   <TableBody>
-                    {peers.map((item: NodeInfoType, index: number) => (
+                    {peers.map((item: any, index: number) => (
                       <TableRow hover key={index} sx={{ '&:last-of-type td': { border: 0 } }}>
-                        <TableCell>{item.ip}</TableCell>
-                        <TableCell>{item.result.location}</TableCell>
-                        <TableCell>{item.result.isp}</TableCell>
-                        <TableCell>{item.result.country}</TableCell>
-                        <TableCell>{item.result.region}</TableCell>
-                        <TableCell>{item.result.city}</TableCell>
+                        <TableCell>{item.country}</TableCell>
+                        <TableCell>{item.region}</TableCell>
+                        <TableCell>{item.peer_host}</TableCell>
+                        <TableCell>{item.node_id}</TableCell>
+                        <TableCell>{item.peak_height}</TableCell>
+                        <TableCell>{item.bytes_read}</TableCell>
+                        <TableCell>{item.bytes_written}</TableCell>
+                        <TableCell>{item.last_message_time}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

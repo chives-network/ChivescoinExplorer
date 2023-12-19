@@ -62,7 +62,7 @@ const BlockList = () => {
   // ** State
   const [isLoading, setIsLoading] = useState(false);
 
-  const paginationModelDefaultValue = { page: 0, pageSize: 15 }
+  const paginationModelDefaultValue = { page: 0, pageSize: 10 }
   const [paginationModel, setPaginationModel] = useState(paginationModelDefaultValue)  
   const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
     setPaginationModel({ ...paginationModel, page:page-1 });
@@ -91,14 +91,14 @@ const BlockList = () => {
 
   const columns: GridColDef[] = [
     {
-      flex: 0.15,
+      flex: 0.1,
       minWidth: 80,
       field: 'Height',
       headerName: `${t(`Height`)}`,
       sortable: false,
       filterable: false,
       renderCell: ({ row }: BlockCellType) => {
-  
+
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <LinkStyled href={`/blocks/view/${row.height}`}>{row.height}</LinkStyled>
@@ -108,47 +108,17 @@ const BlockList = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 80,
       field: 'Hash',
       headerName: `${t(`Hash`)}`,
       sortable: false,
       filterable: false,
       renderCell: ({ row }: BlockCellType) => {
-        
+
         return (
-          <Typography noWrap variant='body2'>
-            <LinkStyled href={`/blocks/view/${row.height}`}>{formatHash(row.indep_hash, 7)}</LinkStyled>
-          </Typography>
-        )
-      }
-    },
-    {
-      flex: 0.4,
-      field: 'Time',
-      minWidth: 260,
-      headerName: `${t(`Time`)}`,
-      sortable: false,
-      filterable: false,
-      renderCell: ({ row }: BlockCellType) => {
-        return (
-          <Typography noWrap variant='body2'>
-            {formatTimestampMemo(row.timestamp)}
-          </Typography>
-        )
-      }
-    },
-    {
-      flex: 0.1,
-      minWidth: 60,
-      headerName: `${t(`Txs`)}`,
-      field: 'Txs',
-      sortable: false,
-      filterable: false,
-      renderCell: ({ row }: BlockCellType) => {
-        return (
-          <Typography noWrap variant='body2'>
-            {row.txs_length}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <LinkStyled href={`/blocks/view/${row.height}`}>{row.header_hash}</LinkStyled>
+          </Box>
         )
       }
     },
@@ -162,43 +132,13 @@ const BlockList = () => {
       renderCell: ({ row }: BlockCellType) => {
         return (
           <Typography noWrap variant='body2'>
-            <LinkStyled href={`/addresses/all/${row.reward_addr}`}>{formatHash(row.reward_addr, 7)}</LinkStyled>
+            <LinkStyled href={`/addresses/all/${row.farmer_address}`}>{formatHash(row.farmer_address, 12)}</LinkStyled>
           </Typography>
         )
       }
     },
     {
       flex: 0.1,
-      minWidth: 110,
-      field: 'Reward',
-      headerName: `${t(`Reward`)}`,
-      sortable: false,
-      filterable: false,
-      renderCell: ({ row }: BlockCellType) => {
-        return (
-          <Typography noWrap variant='body2'>
-            {formatXWE(row.reward, 2)}
-          </Typography>
-        )
-      }
-    },
-    {
-      flex: 0.1,
-      minWidth: 100,
-      field: 'Size',
-      headerName: `${t(`Size`)}`,
-      sortable: false,
-      filterable: false,
-      renderCell: ({ row }: BlockCellType) => {
-        return (
-          <Typography noWrap variant='body2'>
-            {formatStorageSize(row.block_size)}
-          </Typography>
-        )
-      }
-    },
-    {
-      flex: 0.15,
       minWidth: 110,
       field: 'MinedTime',
       headerName: `${t(`MinedTime`)}`,
@@ -207,7 +147,22 @@ const BlockList = () => {
       renderCell: ({ row }: BlockCellType) => {
         return (
           <Typography noWrap variant='body2'>
-            {formatSecondToMinute(row.mining_time)}
+            {row.timestamp}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.1,
+      minWidth: 110,
+      field: 'POS',
+      headerName: `${t(`POS`)}`,
+      sortable: false,
+      filterable: false,
+      renderCell: ({ row }: BlockCellType) => {
+        return (
+          <Typography noWrap variant='body2'>
+            {row.proof_of_space}
           </Typography>
         )
       }

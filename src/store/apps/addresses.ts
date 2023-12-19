@@ -12,10 +12,7 @@ interface DataParams {
 
 // ** Fetch Data
 export const fetchData = createAsyncThunk('appAddresses/fetchData', async (params: DataParams) => {
-  const response = await axios.get(authConfig.backEndApi + '/address/'+ `${params.pageId}` + '/'+params.pageSize)
-  
-  const NewData: any[] = response.data.data.filter((record: any) => record.id)
-  response.data.data = NewData
+  const response = await axios.get(authConfig.backEndApi + '/api.richlist.php?page='+ `${params.pageId}` + '&pagesize='+params.pageSize)
   
   return response.data
 })
