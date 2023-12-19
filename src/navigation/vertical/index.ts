@@ -20,29 +20,9 @@ const ExplorerNavMenus = [
     path: '/blocks'
   },
   {
-    title: 'Transactions',
-    icon: 'grommet-icons:transaction',
-    path: '/txs'
-  },
-  {
     title: 'Addresses',
     icon: 'clarity:wallet-solid',
     path: '/addresses'
-  },
-  {
-    title: 'Resoures',
-    icon: 'mdi:file-multiple',
-    path: '/files/image'
-  },
-  {
-    title: 'Staticstics',
-    icon: 'mdi:chart-areaspline',
-    path: '/statics'
-  },
-  {
-    title: 'Top Stats',
-    icon: 'mdi:poll',
-    path: '/topstats'
   },
   {
     title: 'Nodes',
