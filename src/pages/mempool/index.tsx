@@ -183,8 +183,8 @@ const Mempool = () => {
                     <TableRow>
                     <TableCell>{`${t(`Hash`)}`}</TableCell>
                     <TableCell>{`${t(`From`)}`}</TableCell>
+                    <TableCell>{`${t(`Amount`)}`}</TableCell>
                     <TableCell>{`${t(`To`)}`}</TableCell>
-                    <TableCell>{`${t(`Fee`)}`}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -192,8 +192,8 @@ const Mempool = () => {
                     <TableRow hover key={index} sx={{ '&:last-of-type td': { border: 0 } }}>
                         <TableCell>{formatHash(item.id, 7)}</TableCell>
                         <TableCell>{formatHash(item.From, 7)}</TableCell>
+                        <TableCell>{item.Amount}</TableCell>
                         <TableCell>{formatHash(item.To, 6)}</TableCell>
-                        <TableCell>{item.Fee}</TableCell>
                     </TableRow>
                     ))}
                 </TableBody>

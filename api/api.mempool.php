@@ -31,19 +31,20 @@ if(count(array_keys($mempool_items))>0)								{
 		$Line['id'] 	= $KEY;
 		$Line['TXID'] 	= $KEY;
 		$Line['Fee'] 	= $Element['fee'];
+		$Line['Amount'] 	= bcdiv($ADD_COIN['amount'],$GLOBAL_UNIT,strlen($GLOBAL_UNIT)-1);
 		//print $Element['additions'][0]['puzzle_hash']."<BR>";
 		
 		$ADD_COIN_ARRAY 	= [];
 		foreach($Element['additions'] AS $ADD_COIN)			{
-			$ADD_COIN_ARRAY[] = "<font color=red>".bcdiv($ADD_COIN['amount'],$GLOBAL_UNIT,strlen($GLOBAL_UNIT)-1)."</font> <font color=green>".$chiaUtils->puzzleHashToAddress($ADD_COIN['puzzle_hash'],"xcc"). "</font> ";;
+			$ADD_COIN_ARRAY[] = $chiaUtils->puzzleHashToAddress($ADD_COIN['puzzle_hash'],"xcc");
 		}
-		$Line['From'] = join("<BR>",$ADD_COIN_ARRAY);
+		$Line['From'] = join(",",$ADD_COIN_ARRAY);
 		
 		$DEL_COIN_ARRAY 	= [];
 		foreach($Element['removals'] AS $ADD_COIN)			{
-			$DEL_COIN_ARRAY[] = "<font color=red>".bcdiv($ADD_COIN['amount'],$GLOBAL_UNIT,strlen($GLOBAL_UNIT)-1)."</font> <font color=green>".$chiaUtils->puzzleHashToAddress($ADD_COIN['puzzle_hash'],"xcc"). "</font> ";;
+			$DEL_COIN_ARRAY[] = $chiaUtils->puzzleHashToAddress($ADD_COIN['puzzle_hash'],"xcc");
 		}
-		$Line['To'] = join("<BR>",$DEL_COIN_ARRAY);
+		$Line['To'] = join(",",$DEL_COIN_ARRAY);
 		
 		if(count($ADD_COIN_ARRAY)>0)		{
 			$rs_a[]		= $Line;
